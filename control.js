@@ -1,6 +1,14 @@
 // Bootstrap with jq
 
 // Config
+import DB from './database.js'
+const config = {
+    apiKey: "AIzaSyBWwtg1WueRZkJpee8oQbGLR5Z3zsIZwlQ",
+    authDomain: "scweek-4835c.firebaseapp.com",
+    databaseURL: "https://scweek-4835c.firebaseio.com",
+}
+// firebase.initializeApp(config)
+const db = new DB(config)
 const education = [
     "อนุบาล 1",
     "อนุบาล 1",
@@ -28,6 +36,7 @@ $(function () {
     $('.container .col-sm.div-mouseover[rank]').on('click', function () {
         const rank = $(this).attr('rank')
         $('#exampleModalCenter').attr('rank', rank)
+        $('#infoForm #rank').attr('value', rank)
         // 
         $('.modal-body #name').val(rank)
         $('#exampleModalCenter').modal()
@@ -65,3 +74,19 @@ $('#exampleModalCenter').on('hide.bs.modal', function () {
         $(item).attr('name', null)
     })
 })
+// db.add()
+
+;(async() => {
+    console.log(await db.numChildren())
+    console.log( await db.database.child('user').orderByChild('rank').equalTo("student").once('value') )
+})()
+
+
+// Submit Control
+$('#infoForm').submit(function() {
+    const form = $(this).serializeArray()
+    console.log(db.add(form).key)
+    return false // for don't redirect
+})
+
+// 
