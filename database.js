@@ -22,7 +22,12 @@ class DB {
             if (item.value)
                 data[item.name] = item.value
         })
-        return this.database.ref('user/').push(data)
+        // return this.database.ref('user/').push(data)
+        // this.database.ref('user').push(data, function (callback) {
+        //     console.log(callback)
+        // })
+        return this.database.ref('user').push(data)
+        console.log('end')
     }
 
     async numChildren(callback) {

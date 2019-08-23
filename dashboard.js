@@ -13,24 +13,21 @@ db.database.ref('user').on('child_added', function (snapshot) {
     const user = snapshot.val()
     const element = document.createElement('tr')
     element.setAttribute('key', snapshot.key)
-    const style_fadeout = 'transition: all 1000ms linear'
+    const style_fadeout = 'transition: all 1000ms linear';
 
-    const index = element.appendChild(document.createElement('td'))
-    index.textContent = snapshot.key
-    index.style.transition = 'all 1000ms linear'
-
-    const firstname = element.appendChild(document.createElement('td'))
-    firstname.textContent = user.name
-    firstname.style.transition = 'all 1000ms linear'
-
-    const lastname = element.appendChild(document.createElement('td'))
-    lastname.textContent = user.lastname
-    lastname.style.transition = 'all 1000ms linear'
-
-    const rank = element.appendChild(document.createElement('td'))
-    rank.textContent = user.rank
-    rank.style.transition = 'all 1000ms linear'
-
+    [
+        snapshot.key,
+        user.name,
+        user.lastname,
+        user.sex,
+        user.academy,
+        user.education,
+        user.rank,
+        user['n-of-student'],
+        user.age,
+    ].forEach(ele => {
+        element.appendChild(updateTable(ele))
+    });
 
     $('table tbody').append(element)
     element.className = 'table-success'
@@ -42,26 +39,23 @@ db.database.ref('user').on('child_added', function (snapshot) {
 
 
 db.database.ref('user').on('child_changed', function (snapshot) {
-    const changedUser = snapshot.val()
-    console.log(changedUser)
+    const user = snapshot.val()
     const keyElement = document.querySelector(`[key=${snapshot.key}]`)
-    keyElement.innerHTML = ''
+    keyElement.innerHTML = '';
 
-    const index = keyElement.appendChild(document.createElement('td'))
-    index.textContent = snapshot.key
-    index.style.transition = 'all 1000ms linear'
-
-    const firstname = keyElement.appendChild(document.createElement('td'))
-    firstname.textContent = changedUser.name
-    firstname.style.transition = 'all 1000ms linear'
-
-    const lastname = keyElement.appendChild(document.createElement('td'))
-    lastname.textContent = changedUser.lastname
-    lastname.style.transition = 'all 1000ms linear'
-
-    const rank = keyElement.appendChild(document.createElement('td'))
-    rank.textContent = changedUser.rank
-    rank.style.transition = 'all 1000ms linear'
+    [
+        snapshot.key,
+        user.name,
+        user.lastname,
+        user.sex,
+        user.academy,
+        user.education,
+        user.rank,
+        user['n-of-student'],
+        user.age,
+    ].forEach(val => {
+        keyElement.appendChild(updateTable(val))
+    });
 
     keyElement.className = 'table-warning'
     setTimeout(() => {
@@ -69,11 +63,56 @@ db.database.ref('user').on('child_changed', function (snapshot) {
     }, 2000);
 })
 
-db.database.ref('user').on('child_removed', function(snapshot) {
+function updateTable(val) {
+    const element = document.createElement('td')
+    element.textContent = val
+    element.style.transition = 'all 1000ms linear'
+    return element
+}
+
+db.database.ref('user').on('child_removed', function (snapshot) {
     const removedUser = snapshot.val()
     const keyElement = document.querySelector(`[key=${snapshot.key}]`)
     keyElement.className = 'table-danger'
     setTimeout(() => {
         keyElement.remove()
     }, 2000)
+})
+
+// button[id^=toggle]
+$('#toggleSex').on('click', function (e) {
+    const main = $('thead th:contains("Sex")')
+    main.toggle()
+    $(`td:nth-child(${main.index()})`)
+    // $('td:nth-child(2),th:nth-child(2)').toggle()
+})
+
+$('#toggleAcademy').on('click', function (e) {
+    const main = $('thead th:contains("Academy")')
+    main.toggle()
+    $(`td:nth-child(${main.index()})`)
+})
+
+$('#toggleEducation').on('click', function (e) {
+    const main = $('thead th:contains("Education")')
+    main.toggle()
+    $(`td:nth-child(${main.index()})`)
+})
+
+$('#toggleRank').on('click', function (e) {
+    const main = $('thead th:contains("Education")')
+    main.toggle()
+    $(`td:nth-child(${main.index()})`)
+})
+
+$('#toggleN-Students').on('click', function (e) {
+    const main = $('thead th:contains("N-Students")')
+    main.toggle()
+    $(`td:nth-child(${main.index()})`)
+})
+
+$('#toggleAge').on('click', function (e) {
+    const main = $('thead th:contains("Age")')
+    main.toggle()
+    $(`td:nth-child(${main.index()})`)
 })

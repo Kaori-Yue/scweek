@@ -74,19 +74,36 @@ $('#exampleModalCenter').on('hide.bs.modal', function () {
         $(item).attr('name', null)
     })
 })
-// db.add()
+    // db.add()
 
-;(async() => {
-    console.log(await db.numChildren())
-    console.log( await db.database.child('user').orderByChild('rank').equalTo("student").once('value') )
-})()
+    ; (async () => {
+        // console.log(await db.numChildren())
+        // console.log( await db.database.child('user').orderByChild('rank').equalTo("student").once('value') )
+    })()
 
 
 // Submit Control
-$('#infoForm').submit(function() {
+$('#infoForm').submit(function () {
+    const subbmit = $('button[type="submit"]', this)
+    subbmit.prop('disabled', true)
     const form = $(this).serializeArray()
-    console.log(db.add(form).key)
+
+    const status = db.add(form)
+    status
+        .then(function onSuccess(res) {
+            $('#qrcode_container').removeClass('d-none')
+            $('#qrcode').empty()
+            $('#qrcode').qrcode(res.key)
+            subbmit.prop('disabled', false)
+        })
+        .catch(function onError(res) {
+            console.log('err', res)
+        })
     return false // for don't redirect
 })
 
-// 
+$('#infoForm').on('reset', function () {
+    $('#qrcode_container').addClass('d-none')
+    $('#qrcode').empty()
+})
+//
